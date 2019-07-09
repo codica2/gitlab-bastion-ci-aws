@@ -1,5 +1,7 @@
 <h1 align="center">Autoscaling GitLab Runner on AWS</h1>
 
+![](gitlab-docker-amazon.jpg)
+
 If you want to have a cost-effective and scalable solution for you CI/CD, it can be useful to use Gitlab Runner with its autoscaling feature.
 In this example, we'll show how to configure a Gitlab Runner in AWS that will serve as the bastion where it will spawn new Docker machines on demand.
 
@@ -23,13 +25,13 @@ Install the prerequisites:
 
 After the Runner is registered, we need to edit its configuration file and add the required options for the AWS machine driver.
 
-# Configuration the Gitlab Runner
+# The Gitlab Runner configuration
 
 ## The main section
 
-In the main section, we can define the limit of the jobs that can be run in parallel across all Runners (``concurrent``). We can start with something low like 2, and increase or decrease if we nedd.
+In the main section, we can define the limit of the jobs that can be run in parallel across all Runners (``concurrent``). We can start with something low like 2, and increase or decrease if we need.
 
-The ``check_interval`` option defines how often the Runner should check GitLab for new jobs, in seconds.
+The ``check_interval`` option defines how often the Runner should check GitLab for new jobs (in seconds).
 
 Example:
 ```yaml
@@ -57,7 +59,7 @@ Example:
 
 ## The runners.docker section
 
-In this section we can define the default Docker image to be used by the child Runners if it’s not defined in ``.gitlab-ci.yml``. By using ``privileged = true``, all Runners will be able to run [Docker in Docker](https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-docker-in-docker-executor).
+In this section, we can define the default Docker image to be used by the child Runners if it’s not defined in ``.gitlab-ci.yml``. By using ``privileged = true``, all Runners will be able to run [Docker in Docker](https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-docker-in-docker-executor).
 
 Next, we use ``disable_cache = true`` to disable the Docker executor’s inner cache mechanism since we will use the distributed cache mode as described in the following section.
 
@@ -117,7 +119,7 @@ This is the most important part of the configuration and it’s the one that tel
       "amazonec2-instance-type=m4.2xlarge",
     ]
 ```
-[Read more](https://docs.gitlab.com/runner/configuration/runner_autoscale_aws/#the-runnersmachine-section) about MachineOptions
+[Read more](https://docs.gitlab.com/runner/configuration/runner_autoscale_aws/#the-runnersmachine-section) about MachineOptions.
 
 ## Getting it all together
 
@@ -171,7 +173,7 @@ check_interval = 0
     ]
 ```
 
-[Read official documentation](https://docs.gitlab.com/runner/configuration/runner_autoscale_aws/#introduction) about Autoscaling GitLab Runner on AWS
+[Read the official documentation](https://docs.gitlab.com/runner/configuration/runner_autoscale_aws/#introduction) about Autoscaling GitLab Runner on AWS.
 
 ## License
 Copyright © 2015-2019 Codica. It is released under the [MIT License](https://opensource.org/licenses/MIT).
@@ -183,3 +185,4 @@ Copyright © 2015-2019 Codica. It is released under the [MIT License](https://op
 The names and logos for Codica are trademarks of Codica.
 
 We love open source software! See [our other projects](https://github.com/codica2) or [hire us](https://www.codica.com/) to design, develop, and grow your product.
+
