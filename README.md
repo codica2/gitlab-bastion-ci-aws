@@ -193,7 +193,7 @@ check_interval = 0
 
 ## License
 
-Copyright © 2015-2019 Codica. It is released under the [MIT License](https://opensource.org/licenses/MIT).
+Copyright © 2015-2021 Codica. It is released under the [MIT License](https://opensource.org/licenses/MIT).
 
 ## About Codica
 
