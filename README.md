@@ -134,7 +134,7 @@ This is the most important part of the configuration and it’s the one that tel
 
 Firstly, we need to create `IAM Role` for out bastion server. Below you can see which permissions for IAM Role you need.  
 [Read more about IAM Roles](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html) . 
-Example for creating EC2-spot instances(it uses on bastion server):
+Example for creating EC2-spot instances(it uses on `bastion server`):
 ```json
 {
     "Version": "2012-10-17",
@@ -171,6 +171,77 @@ Example for creating EC2-spot instances(it uses on bastion server):
                     "aws:SourceIp": "<use your EIP on bastion>" # It is means what you can use iam:PassRole only from your IP.
                 }
             }
+        }
+    ]
+}
+```
+Next step, you need to create IAM Role for your runners. Your permissions will depends on your CI/CD process.  
+Below, permission for our runners with our CI/CD process:
+```json
+
+{
+  # This permission we are using for UpdateService in deploy stage in our CI/CD process.
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ecs:UpdateService"
+            ],
+            "Resource": [
+                "arn:aws:ecs:region:account-id:service/name_of_cluster/name_of_service",
+                "arn:aws:ecs:region:account-id:service/name_of_cluster/name_of_service",
+                "arn:aws:ecs:region:account-id:service/name_of_cluster/name_of_service",
+                "arn:aws:ecs:region:account-id:service/name_of_cluster/name_of_service",
+                "arn:aws:ecs:region:account-id:service/name_of_cluster/name_of_service",
+                "arn:aws:ecs:region:account-id:service/name_of_cluster/name_of_service"
+            ]
+        }
+    ]
+}
+```
+Push policy uses for `push our image to ECR repositories`:
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ecr:CompleteLayerUpload",
+                "ecr:UploadLayerPart",
+                "ecr:InitiateLayerUpload",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:PutImage",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage"
+            ],
+            "Resource": [
+                "arn:aws:ecr:region:account-id:repository/name_of_repo",
+                "arn:aws:ecr:region:account-id:repository/name_of_repo",
+                "arn:aws:ecr:region:account-id:repository/name_of_repo",
+                "arn:aws:ecr:region:account-id:repository/name_of_repo"
+            ]
+        },
+        {
+            "Action": [
+                "ecr:GetAuthorizationToken"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        }
+    ]
+}
+```
+Policy for Describe Target Health on our `ELB`:
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "elasticloadbalancing:DescribeTargetHealth",
+            "Resource": "*"
         }
     ]
 }
