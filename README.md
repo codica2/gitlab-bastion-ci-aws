@@ -65,6 +65,7 @@ Example:
 ## The runners.docker section
 
 In this section, we can define the default Docker image to be used by the child Runners if it’s not defined in ` `.gitlab-ci.yml`  `. By using `  `privileged = true` `, all Runners will be able to run [Docker in Docker](https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-docker-in-docker-executor).
+Actually, for build our apps we use Kaniko executor and we dont need to use privileged mode on our docker-machines
 
 Next, we use ` `disable_cache = true` ` to disable the Docker executor’s inner cache mechanism since we will use the distributed cache mode as described in the following section.
 
@@ -74,11 +75,10 @@ Example:
   [runners.docker]
     tls_verify = false
     image = "alpine"
-    privileged = true
+    privileged = false
     disable_entrypoint_overwrite = false
     oom_kill_disable = false
     disable_cache = true
-    volumes = ["/var/run/docker.sock:/var/run/docker.sock", "/cache"]
     shm_size = 0
 ```
 
@@ -87,7 +87,7 @@ Example:
 ## The runners.cache section
 
 To speed up our jobs, GitLab Runner provides a cache mechanism. It is recommended to use the distributed cache mechanism that GitLab Runner provides. Since new instances will be created on demand, it is essential to have a common place where the cache is stored.
-
+In next example we dont use ACCESS_KEY or SECRET_KEY. Gitlab-runner will look on our IAM Role on our bastion.
 In the following example, we use Amazon S3:
 
 ```yaml
@@ -95,9 +95,6 @@ In the following example, we use Amazon S3:
     Type = "s3"
     Shared = true
     [runners.cache.s3]
-      ServerAddress = "s3.amazonaws.com"
-      AccessKey = "<your AWS Access Key ID>"
-      SecretKey = "<your AWS Secret Access Key>"
       BucketName = "<the bucket where your cache should be kept>"
       BucketLocation = "us-east-1"
 ```
@@ -114,8 +111,7 @@ This is the most important part of the configuration and it’s the one that tel
     MachineDriver = "amazonec2"
     MachineName = "gitlab-docker-machine-%s"
     MachineOptions = [
-      "amazonec2-access-key=XXXXX", 
-      "amazonec2-secret-key=XXXXX", 
+      "amazonec2-iam-instance-profile=nameOfRole", # For best security features we can use IAM Roles instead of AWS keys
       "amazonec2-region=XXXXX", 
       "amazonec2-vpc-id=vpc-XXXXX", 
       "amazonec2-subnet-id=subnet-XXXXX", 
@@ -150,19 +146,15 @@ check_interval = 0
   limit = 20
   [runners.cache]
     [runners.cache.s3]
-      ServerAddress = "s3.amazonaws.com"
-      AccessKey = "<your AWS Access Key ID>"
-      SecretKey = "<your AWS Secret Access Key>"
       BucketName = "<the bucket where your cache should be kept>"
       BucketLocation = "us-east-1"
   [runners.docker]
     tls_verify = false
     image = "alpine"
-    privileged = true
+    privileged = false
     disable_entrypoint_overwrite = false
     oom_kill_disable = false
     disable_cache = true
-    volumes = ["/var/run/docker.sock:/var/run/docker.sock", "/cache"]
     shm_size = 0
   [runners.machine]
     IdleCount = 0
@@ -171,8 +163,7 @@ check_interval = 0
     MachineDriver = "amazonec2"
     MachineName = "gitlab-docker-machine-%s"
     MachineOptions = [
-      "amazonec2-access-key=XXXXX", 
-      "amazonec2-secret-key=XXXXX", 
+      "amazonec2-iam-instance-profile=nameOfRole",
       "amazonec2-region=XXXXX", 
       "amazonec2-vpc-id=vpc-XXXXX", 
       "amazonec2-subnet-id=subnet-XXXXX", 
@@ -193,7 +184,7 @@ check_interval = 0
 
 ## License
 
-Copyright © 2015-2021 Codica. It is released under the [MIT License](https://opensource.org/licenses/MIT).
+Copyright © 2015-2022 Codica. It is released under the [MIT License](https://opensource.org/licenses/MIT).
 
 ## About Codica
 
