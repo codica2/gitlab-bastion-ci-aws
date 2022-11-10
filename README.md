@@ -130,6 +130,53 @@ This is the most important part of the configuration and it’s the one that tel
 
 [Read more](https://docs.gitlab.com/runner/configuration/runner_autoscale_aws/#the-runnersmachine-section) about MachineOptions.
 
+## Use IAM Roles instead of AWS_SECRET_KEY and AWS_ACCESS_KEY
+
+Firstly, we need to create `IAM Role` for out bastion server. Below you can see which permissions for IAM Role you need.
+[Read more about IAM Roles](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html)
+Example for creating EC2-spot instances(it uses on bastion server):
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "ec2:DescribeKeyPairs",
+                "ec2:TerminateInstances",
+                "ec2:StopInstances",
+                "ec2:StartInstances",
+                "ec2:RunInstances",
+                "ec2:RebootInstances",
+                "ec2:CreateKeyPair",
+                "ec2:DeleteKeyPair",
+                "ec2:ImportKeyPair",
+                "ec2:Describe*",
+                "ec2:CreateTags",
+                "ec2:RequestSpotInstances",
+                "ec2:CancelSpotInstanceRequests",
+                "ec2:DescribeSubnets",
+                "ec2:AssociateIamInstanceProfile"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Action": [
+                "iam:PassRole"
+            ],
+            "Effect": "Allow",
+            "Resource": "*",
+            "Condition": {
+                "IpAddress": {
+                    "aws:SourceIp": "<use your EIP on bastion>" # It is means what you can use iam:PassRole only from your IP.
+                }
+            }
+        }
+    ]
+}
+```
+
+
 ## Getting it all together
 
 Here’s the full example of `/etc/gitlab-runner/config.toml`:
