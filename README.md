@@ -45,7 +45,7 @@ check_interval = 0
 
 ## The runners section
 
-From the ` `[[runners]]` ` section, the most important part is the executor which must be set to docker+machine. Most of those settings are taken care of when you register the Runner for the first time.
+From the  `[[runners]]`  section, the most important part is the executor which must be set to docker+machine. Most of those settings are taken care of when you register the Runner for the first time.
 
 ` `limit`  ` sets the maximum number of machines (running and idle) that this Runner will spawn. For more info check the relationship between `  `limit`  `, concurrent and `  `IdleCount` `.
 
@@ -64,7 +64,7 @@ Example:
 
 ## The runners.docker section
 
-In this section, we can define the default Docker image to be used by the child Runners if it’s not defined in ` `.gitlab-ci.yml`  `. By using `  `privileged = true` `, all Runners will be able to run [Docker in Docker](https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-docker-in-docker-executor).
+In this section, we can define the default Docker image to be used by the child Runners if it’s not defined in  `.gitlab-ci.yml`  `. By using `  `privileged = true`, all Runners will be able to run [Docker in Docker](https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-docker-in-docker-executor).
 Actually, for build our apps we use Kaniko executor and we dont need to use privileged mode on our docker-machines
 
 Next, we use ` `disable_cache = true` ` to disable the Docker executor’s inner cache mechanism since we will use the distributed cache mode as described in the following section.
