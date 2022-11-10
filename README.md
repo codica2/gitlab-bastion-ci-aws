@@ -132,8 +132,8 @@ This is the most important part of the configuration and it’s the one that tel
 
 ## Use IAM Roles instead of AWS_SECRET_KEY and AWS_ACCESS_KEY
 
-Firstly, we need to create `IAM Role` for out bastion server. Below you can see which permissions for IAM Role you need.
-[Read more about IAM Roles](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html)
+Firstly, we need to create `IAM Role` for out bastion server. Below you can see which permissions for IAM Role you need.  
+[Read more about IAM Roles](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html) . 
 Example for creating EC2-spot instances(it uses on bastion server):
 ```json
 {
@@ -175,7 +175,6 @@ Example for creating EC2-spot instances(it uses on bastion server):
     ]
 }
 ```
-
 
 ## Getting it all together
 
